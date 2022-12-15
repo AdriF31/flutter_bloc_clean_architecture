@@ -1,12 +1,26 @@
 import 'package:advicer/application/core/services/theme_service.dart';
+import 'package:advicer/application/pages/advice/bloc/advicer_bloc.dart';
 import 'package:advicer/application/pages/advice/widgets/advice_field.dart';
 import 'package:advicer/application/pages/advice/widgets/custom_button.dart';
 import 'package:advicer/application/pages/advice/widgets/error_message.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
-class AdvicePage extends StatelessWidget {
-  const AdvicePage({Key? key}) : super(key: key);
+class AdvicerPageWrapperProvider extends StatelessWidget {
+  const AdvicerPageWrapperProvider({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => AdvicerBloc(),
+      child: const AdvicerPage(),
+    );
+  }
+}
+
+class AdvicerPage extends StatelessWidget {
+  const AdvicerPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -32,20 +46,39 @@ class AdvicePage extends StatelessWidget {
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(child: Center(
+                  child: BlocBuilder<AdvicerBloc, AdvicerState>(
+                builder: (context, state) {
 
-            children: const [
-              Expanded(
-                  child: Center(
-                child: ErrorMessage(message: "something went wrong",)
-                // AdviceField(
-                //   advice: "something",
-                // )
-                // CircularProgressIndicator(color: themeData.colorScheme.secondary,)
-                // Text(
-                //   "Get your advice here",
-                //   style: themeData.textTheme.headline1,
-                // ),
-              )),
+                  if (state is AdvicerInitial) {
+                    return Text(
+                      "Get your advice here",
+                      style: themeData.textTheme.headline1,
+                    );
+                  }
+                  else if (state is AdvicerStateLoading) {
+                    return CircularProgressIndicator(
+                      color: themeData.colorScheme.onPrimary,
+                    );
+                  }
+                  else if (state is AdvicerStateError) {
+                    return ErrorMessage(
+                      message: state.message,
+                    );
+                  }
+                  else if(state is AdvicerStateLoaded){
+                    return AdviceField(
+                      advice: state.advice,
+                    );
+                  }
+                  return const SizedBox();
+                },
+              )
+
+                  // CircularProgressIndicator(color: themeData.colorScheme.secondary,)
+
+                  )),
               CustomButton(),
             ],
           ),
