@@ -1,5 +1,6 @@
 import 'package:advicer/const/const_value.dart';
-import 'package:advicer/data/models/AdviceModel.dart';
+import 'package:advicer/data/exeptions/exeptions.dart';
+import 'package:advicer/data/models/advice_model.dart';
 import 'package:dio/dio.dart';
 
 abstract class AdviceRemoteDatasource {
@@ -14,8 +15,12 @@ class AdviceRemoteDataSourceImpl implements AdviceRemoteDatasource {
 
   @override
   Future<AdviceModel> getRandomAdviceFromApi() async {
-    var response = await dio.get(baseUrl,
-        options: Options(headers: {"content-type": "application/json"}));
-    return AdviceModel.fromJson(response.data);
+   try{
+     var response = await dio.get(baseUrl,
+         options: Options(headers: {"content-type": "application/json"}));
+     return AdviceModel.fromJson(response.data);
+   } on DioError catch(_){
+     throw ServerExeption();
+   }
   }
 }
