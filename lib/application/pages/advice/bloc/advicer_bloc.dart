@@ -8,9 +8,15 @@ part 'advicer_event.dart';
 
 part 'advicer_state.dart';
 
+const generalFailureMessage = 'Ups, something gone wrong. Please try again!';
+const serverFailureMessage = 'Ups, API Error. please try again!';
+const cacheFailureMessage = 'Ups, chache failed. Please try again!';
+
+
 class AdvicerBloc extends Bloc<AdvicerEvent, AdvicerState> {
-  AdvicerBloc() : super(AdvicerInitial()) {
-    final AdviceUseCases adviceUseCases = AdviceUseCases();
+  final AdviceUseCases adviceUseCases;
+  AdvicerBloc({required this.adviceUseCases}) : super(AdvicerInitial()) {
+
     on<AdviceRequestEvent>((event, emit) async {
       emit(AdvicerStateLoading());
       //execute bussiness logic
@@ -28,11 +34,11 @@ class AdvicerBloc extends Bloc<AdvicerEvent, AdvicerState> {
   String _mapFailureToMessage(Failure failure) {
     switch (failure.runtimeType) {
       case ServerFailure:
-        return "server error";
+        return serverFailureMessage;
       case CacheFailure:
-        return "cache fail";
+        return cacheFailureMessage;
       default:
-        return "General Failure";
+        return generalFailureMessage;
     }
   }
 }

@@ -11,16 +11,20 @@ abstract class AdviceRemoteDatasource {
 }
 
 class AdviceRemoteDataSourceImpl implements AdviceRemoteDatasource {
-  Dio dio = Dio();
+  Dio dio;
+  AdviceRemoteDataSourceImpl({required this.dio});
 
   @override
   Future<AdviceModel> getRandomAdviceFromApi() async {
-   try{
+
      var response = await dio.get(baseUrl,
          options: Options(headers: {"content-type": "application/json"}));
-     return AdviceModel.fromJson(response.data);
-   } on DioError catch(_){
-     throw ServerExeption();
-   }
+     if(response.statusCode!=200){
+       throw ServerExeption();
+     }else{
+       return AdviceModel.fromJson(response.data);
+     }
+
+
   }
 }
