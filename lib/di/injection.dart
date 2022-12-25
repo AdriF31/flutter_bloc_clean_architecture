@@ -1,5 +1,6 @@
 import 'package:advicer/application/pages/advice/bloc/advicer_bloc.dart';
 import 'package:advicer/data/datasources/advice_remote_datasource.dart';
+import 'package:advicer/data/network_core.dart';
 import 'package:advicer/data/repositories/advice_repository_impl.dart';
 import 'package:advicer/domain/repositories/advice_repository.dart';
 import 'package:advicer/domain/usecases/advice_usecases.dart';
@@ -19,8 +20,8 @@ Future<void> init() async {
   sl.registerFactory<AdviceRepository>(
       () => AdviceRepositoryImpl(adviceRemoteDatasource: sl()));
   sl.registerFactory<AdviceRemoteDatasource>(
-      () => AdviceRemoteDataSourceImpl(dio: sl()));
+      () => AdviceRemoteDataSourceImpl(network: sl()));
 
   //extern
-  sl.registerFactory(() => Dio());
+  sl.registerFactory(() => NetworkCore());
 }

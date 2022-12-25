@@ -9,6 +9,5 @@ class AdviceUseCases {
   final AdviceRepository adviceRepository;
   Future<Either<Failure,AdviceEntity>> getAdvice() async {
     return adviceRepository.getAdviceFromDatasource();
-
   }
 }

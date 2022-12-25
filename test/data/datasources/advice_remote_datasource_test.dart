@@ -2,18 +2,20 @@ import 'package:advicer/const/const_value.dart';
 import 'package:advicer/data/datasources/advice_remote_datasource.dart';
 import 'package:advicer/data/exceptions/exeptions.dart';
 import 'package:advicer/data/models/advice_model.dart';
+import 'package:advicer/data/network_core.dart';
 import 'package:dio/dio.dart';
 import 'package:http_mock_adapter/http_mock_adapter.dart';
 import 'package:mockito/annotations.dart';
 import 'package:test/test.dart';
 
-@GenerateNiceMocks([MockSpec<Dio>()])
+
+
 void main() {
-  final dio = Dio();
-  final dioAdapter = DioAdapter(dio: dio);
-  dio.httpClientAdapter = dioAdapter;
+  final network = NetworkCore();
+  final dioAdapter = DioAdapter(dio:network.dio );
+  network.dio.httpClientAdapter = dioAdapter;
   final AdviceRemoteDatasource adviceRemoteDatasourceUnderTest =
-      AdviceRemoteDataSourceImpl(dio: dio);
+      AdviceRemoteDataSourceImpl(network: network);
 
   void setMockDioSuccess() async {
     dioAdapter.onGet(baseUrl, (server) {
