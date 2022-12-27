@@ -10,7 +10,7 @@ part 'advicer_state.dart';
 
 const generalFailureMessage = 'Ups, something gone wrong. Please try again!';
 const serverFailureMessage = 'Ups, API Error. please try again!';
-const cacheFailureMessage = 'Ups, chache failed. Please try again!';
+const cacheFailureMessage = 'Ups, cache failed. Please try again!';
 
 
 class AdvicerBloc extends Bloc<AdvicerEvent, AdvicerState> {
